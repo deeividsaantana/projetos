@@ -5,11 +5,16 @@ const { URL } = require('url');
 const querystring = require('querystring');
 const { gerarEPublicar } = require('./gerar-e-publicar');
 const { criarPreferenciaPagamento } = require('./criar-preferencia');
+const { criarAssinaturaMensal } = require('./criar-assinatura');
 const { enviarMensagem } = require('./whatsapp');
 const { processarMensagem } = require('./lead-conversa');
 
 const PUBLIC_DIR = path.join(__dirname, 'public');
-const EXEMPLO_DIR = path.join(__dirname, '..', 'exemplo', 'saida');
+const EXEMPLOS_DIR = {
+  1: path.join(__dirname, '..', 'exemplo', 'saida'),
+  2: path.join(__dirname, '..', 'exemplo', 'saida-2'),
+  3: path.join(__dirname, '..', 'exemplo', 'saida-3'),
+};
 
 const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN;
 const WHATSAPP_VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN;
@@ -38,6 +43,26 @@ async function buscarPagamento(paymentId) {
   return resposta.json();
 }
 
+/**
+ * Pagamentos únicos trazem os dados do cliente em `metadata`. Pagamentos de
+ * assinatura (Preapproval) não têm `metadata` — os dados vêm compactados em
+ * `external_reference` (ver criar-assinatura.js).
+ */
+function extrairDadosCliente(pagamento) {
+  if (pagamento.metadata && pagamento.metadata.nomeEmpresa) {
+    return pagamento.metadata;
+  }
+  if (pagamento.external_reference) {
+    try {
+      const dados = JSON.parse(pagamento.external_reference);
+      if (dados.nomeEmpresa) return dados;
+    } catch {
+      // external_reference não era um JSON compactado de cliente — ignora.
+    }
+  }
+  return null;
+}
+
 async function tratarNotificacaoPagamento(paymentId) {
   const pagamento = await buscarPagamento(paymentId);
 
@@ -46,10 +71,10 @@ async function tratarNotificacaoPagamento(paymentId) {
     return;
   }
 
-  const dadosCliente = pagamento.metadata;
-  if (!dadosCliente || !dadosCliente.nomeEmpresa) {
+  const dadosCliente = extrairDadosCliente(pagamento);
+  if (!dadosCliente) {
     registrarLog(
-      `Pagamento ${paymentId} aprovado, mas sem metadata de cliente válido. Revisar manualmente.`
+      `Pagamento ${paymentId} aprovado, mas sem dados de cliente válidos (metadata/external_reference). Revisar manualmente.`
     );
     return;
   }
@@ -113,9 +138,16 @@ async function tratarPedidoFormulario(campos) {
       .map((nome) => ({ nome })),
   };
 
-  const linkPagamento = await criarPreferenciaPagamento(dadosCliente, campos.pacote || 'basico');
+  const pacote = campos.pacote || 'basico';
+  const tipoPagamento = campos.tipoPagamento === 'mensal' ? 'mensal' : 'unico';
+
+  const linkPagamento =
+    tipoPagamento === 'mensal'
+      ? await criarAssinaturaMensal(dadosCliente, pacote)
+      : await criarPreferenciaPagamento(dadosCliente, pacote);
+
   registrarLog(
-    `Pedido via formulário web: preferência criada para "${dadosCliente.nomeEmpresa}" (${dadosCliente.whatsapp}): ${linkPagamento}`
+    `Pedido via formulário web (${tipoPagamento}): link criado para "${dadosCliente.nomeEmpresa}" (${dadosCliente.whatsapp}): ${linkPagamento}`
   );
   return linkPagamento;
 }
@@ -123,8 +155,16 @@ async function tratarPedidoFormulario(campos) {
 const servidor = http.createServer((req, res) => {
   const urlRequisicao = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
 
-  if (req.method === 'GET' && (urlRequisicao.pathname === '/exemplo' || urlRequisicao.pathname === '/exemplo/')) {
-    fs.readFile(path.join(EXEMPLO_DIR, 'index.html'), (erro, conteudo) => {
+  const matchExemplo = urlRequisicao.pathname.match(/^\/exemplo(?:\/(\d))?\/?$/);
+  if (req.method === 'GET' && matchExemplo) {
+    const numero = Number(matchExemplo[1] || '1');
+    const dir = EXEMPLOS_DIR[numero];
+    if (!dir) {
+      res.writeHead(404);
+      res.end('Exemplo não encontrado');
+      return;
+    }
+    fs.readFile(path.join(dir, 'index.html'), (erro, conteudo) => {
       if (erro) {
         res.writeHead(404);
         res.end('Exemplo não encontrado');
@@ -136,8 +176,16 @@ const servidor = http.createServer((req, res) => {
     return;
   }
 
-  if (req.method === 'GET' && urlRequisicao.pathname === '/exemplo/style.css') {
-    fs.readFile(path.join(EXEMPLO_DIR, 'style.css'), (erro, conteudo) => {
+  const matchExemploCss = urlRequisicao.pathname.match(/^\/exemplo(?:\/(\d))?\/style\.css$/);
+  if (req.method === 'GET' && matchExemploCss) {
+    const numero = Number(matchExemploCss[1] || '1');
+    const dir = EXEMPLOS_DIR[numero];
+    if (!dir) {
+      res.writeHead(404);
+      res.end('not found');
+      return;
+    }
+    fs.readFile(path.join(dir, 'style.css'), (erro, conteudo) => {
       if (erro) {
         res.writeHead(404);
         res.end('not found');

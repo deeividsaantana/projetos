@@ -6,6 +6,13 @@ const PACOTES = {
   catalogo: { titulo: 'Site para MEI - Plano Catálogo', preco: 997 },
 };
 
+/** Preços mensais equivalentes, usados quando o cliente escolhe assinatura em vez de pagamento único. */
+const PACOTES_MENSAL = {
+  basico: { titulo: 'Site para MEI - Plano Básico (mensal)', preco: 39 },
+  intermediario: { titulo: 'Site para MEI - Plano Intermediário (mensal)', preco: 79 },
+  catalogo: { titulo: 'Site para MEI - Plano Catálogo (mensal)', preco: 129 },
+};
+
 /**
  * Cria uma preferência de pagamento (Pix/Checkout) no Mercado Pago, já com
  * os dados do cliente anexados em `metadata`. Quando o pagamento for
@@ -52,4 +59,4 @@ async function criarPreferenciaPagamento(dadosCliente, pacote = 'basico') {
   return dados.init_point;
 }
 
-module.exports = { criarPreferenciaPagamento, PACOTES };
+module.exports = { criarPreferenciaPagamento, PACOTES, PACOTES_MENSAL };

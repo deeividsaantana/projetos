@@ -75,7 +75,13 @@ Quando o WhatsApp estiver liberado, configure também:
 
 ## Como o formulário funciona (`public/pedido.html`)
 
-Página HTML simples (sem framework) com os mesmos campos da conversa do WhatsApp: nome da empresa, ramo, cidade, WhatsApp, e-mail, slogan, sobre, serviços (separados por vírgula) e o plano desejado. Ao enviar, `server.js` cria a preferência no Mercado Pago e redireciona o navegador direto para a página de pagamento — sem passo intermediário.
+Landing page com animações (GSAP + ScrollTrigger), demonstração ao vivo de 3 sites de exemplo gerados pelo próprio gerador (`/exemplo/1`, `/exemplo/2`, `/exemplo/3`), cards de plano clicáveis e os mesmos campos da conversa do WhatsApp: nome da empresa, ramo, cidade, WhatsApp, e-mail, slogan, sobre e serviços (separados por vírgula).
+
+O cliente também escolhe a **forma de pagamento**: pagamento único (Checkout Pro) ou assinatura mensal (Preapproval). Ao enviar, `server.js` chama `criar-preferencia.js` (único) ou `criar-assinatura.js` (mensal) e redireciona o navegador direto para a página de pagamento do Mercado Pago — sem passo intermediário.
+
+**Pagamento único (Checkout Pro)** já abre com Pix, cartão de crédito, boleto e outras formas automaticamente — é nativo do Mercado Pago, não precisa de código extra pra isso.
+
+**Assinatura mensal (Preapproval)** cobra automaticamente todo mês até ser cancelada, e exige e-mail do cliente (obrigatório só nesse modo). Como a API de assinaturas não tem campo `metadata` como a de preferências, os dados do cliente vão compactados (sem descrições/preços de serviço) no campo `external_reference`; o webhook de pagamento (`/webhook/mercadopago`) sabe ler dos dois formatos.
 
 ## Como a conversa do WhatsApp funciona (`lead-conversa.js`, quando ativado)
 
@@ -93,6 +99,7 @@ No WhatsApp, o pacote cobrado é sempre o **Plano Básico (R$ 297)** — os pre�
 
 ## Limitações conhecidas desta primeira versão
 
-- Não valida WhatsApp/e-mail/telefone duplicado — um mesmo lead pode gerar várias cobranças se mandar "oi" de novo.
-- Não oferece ao cliente escolher entre os pacotes Básico/Intermediário/Catálogo — sempre cobra o Básico.
+- Não valida WhatsApp/e-mail/telefone duplicado — um mesmo lead pode gerar várias cobranças se mandar "oi" de novo (ou reenviar o formulário).
+- No WhatsApp, não oferece ao cliente escolher entre os pacotes Básico/Intermediário/Catálogo nem entre pagamento único/mensal — sempre cobra o Básico à vista. No formulário web o cliente já escolhe os dois.
 - Não implementa limite de frequência de mensagens nem opt-out — a decisão de LGPD/anti-spam do plano do funil ainda precisa ser aplicada aqui antes de usar em produção com leads frios (hoje o fluxo é pensado para quem já chamou a empresa no WhatsApp, não para disparo em massa).
+- Assinatura mensal: cada cobrança mensal aprovada dispara `gerarEPublicar` de novo (reafirma/republica o mesmo site) — não é um problema grave, mas é redundante. Cancelamento de assinatura (quando o cliente para de pagar) não derruba o site automaticamente — isso ficaria pra uma versão futura com persistência real.
