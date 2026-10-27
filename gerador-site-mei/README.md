@@ -86,6 +86,11 @@ Ou arraste a pasta `saida/` em [app.netlify.com/drop](https://app.netlify.com/dr
 
 O template-base está em [`template/template.html`](template/template.html) e [`template/style.css`](template/style.css). Os marcadores `{{NOME_EMPRESA}}`, `{{SERVICOS}}` etc. são substituídos pelo script `gerador.js` a partir do JSON. Para mudar o layout padrão de todos os sites gerados, edite esses dois arquivos.
 
+## Funil completo
+
+- [`automacao/`](automacao/README.md): lead (formulário web ou WhatsApp) → pagamento (Pix/cartão/boleto, único ou assinatura) → geração → publicação automática.
+- [`prospeccao/`](prospeccao/README.md): acha negócios locais sem site via Google Places, pra quem quer vender ativamente em vez de só esperar o lead chegar.
+
 ## Próximos passos sugeridos
 
 - Integrar a geração a um webhook de pagamento (ex.: confirmação de Pix no Mercado Pago) para disparar o deploy automaticamente após o pagamento.
