@@ -7,23 +7,24 @@
 <meta name="description" content="Peça seu site profissional, pague via Pix e receba publicado automaticamente." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <style>
   :root {
-    --bg: #07090d;
-    --bg-elev: #0f141b;
-    --card: #141b24;
-    --card-2: #1a2330;
-    --border: #253040;
+    --bg: #0b0a10;
+    --bg-elev: #111016;
+    --card: #15141c;
+    --card-2: #1a1823;
+    --border: #272532;
     --text: #f5f7fa;
-    --muted: #96a4b6;
+    --muted: #8d8a9c;
     --accent: #2fe3a0;
     --accent-2: #5b8cff;
     --accent-3: #c084fc;
     --accent-grad: linear-gradient(135deg, #2fe3a0, #5b8cff);
     --accent-grad-2: linear-gradient(135deg, #5b8cff, #c084fc);
+    --mono: "JetBrains Mono", "SF Mono", Consolas, monospace;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -38,7 +39,19 @@
     overflow-x: hidden;
   }
   h1, h2, h3, .logo { font-family: "Sora", "Inter", sans-serif; }
+  .mono { font-family: var(--mono); }
   .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+  .section-num {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.04em;
+    display: block;
+    margin-bottom: 10px;
+  }
+  .section-num::before { content: "// "; color: var(--muted); }
 
   nav {
     position: fixed;
@@ -52,6 +65,16 @@
   .logo { font-weight: 800; letter-spacing: -0.02em; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; }
   .logo-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent-grad); box-shadow: 0 0 14px rgba(47, 227, 160, 0.7); }
   .logo span { background: var(--accent-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .nav-links { display: flex; align-items: center; gap: 26px; }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .nav-links a span { color: var(--accent); margin-right: 2px; }
+  .nav-links a:hover { color: var(--text); }
+  @media (max-width: 760px) { .nav-links { display: none; } }
   .nav-cta {
     background: var(--accent-grad);
     color: #04150f;
@@ -208,6 +231,7 @@
     background: var(--accent-grad);
     color: #06140f;
     font-weight: 800;
+    font-family: var(--mono);
     margin-bottom: 18px;
   }
   .step-card h3 { font-size: 1.1rem; margin-bottom: 8px; }
@@ -281,6 +305,7 @@
 
   .pacotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
   .pacote-card {
+    position: relative;
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 18px;
@@ -289,9 +314,26 @@
     transition: border-color 0.2s ease;
   }
   .pacote-card.selecionado { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  .pacote-card .ticket-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    color: var(--muted);
+  }
+  .pacote-card .ticket-head .numero { color: var(--muted); }
+  .pacote-card .ticket-head .status {
+    color: var(--accent);
+    border: 1px solid rgba(47, 227, 160, 0.3);
+    background: rgba(47, 227, 160, 0.08);
+    padding: 3px 9px;
+    border-radius: 999px;
+  }
   .pacote-card .tag { color: var(--accent); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
   .pacote-card h3 { font-size: 1.3rem; margin: 10px 0 4px; }
-  .pacote-card .preco { font-size: 1.9rem; font-weight: 800; margin-bottom: 16px; }
+  .pacote-card .preco { font-size: 1.9rem; font-weight: 800; margin-bottom: 16px; font-family: var(--mono); }
   .pacote-card .preco span { font-size: 0.95rem; color: var(--muted); font-weight: 500; }
   .pacote-card ul { list-style: none; color: var(--muted); font-size: 0.9rem; display: flex; flex-direction: column; gap: 8px; }
   .pacote-card li::before { content: "✓ "; color: var(--accent); font-weight: 800; }
@@ -350,6 +392,12 @@
 <nav>
   <div class="wrap">
     <div class="logo"><span class="logo-dot"></span>Site<span>MEI</span></div>
+    <div class="nav-links">
+      <a href="#como-funciona"><span>01</span>como funciona</a>
+      <a href="#demo"><span>02</span>demonstração</a>
+      <a href="#pacotes"><span>03</span>planos</a>
+      <a href="#pedido"><span>04</span>pedido</a>
+    </div>
     <a class="nav-cta" href="#pedido">Pedir meu site</a>
   </div>
 </nav>
@@ -359,7 +407,7 @@
   <span class="blob blob-2"></span>
   <span class="blob blob-3"></span>
   <div class="wrap">
-    <span class="eyebrow">Para empreendedores MEI</span>
+    <span class="eyebrow mono">pedido.status → aberto</span>
     <h1>Seu site profissional, <span class="grad">publicado em minutos</span>, não em semanas</h1>
     <p class="lead">Preencha seus dados, pague via Pix e o site já sai gerado e no ar automaticamente — sem agência, sem espera.</p>
     <div class="hero-ctas">
@@ -394,6 +442,7 @@
 <section id="como-funciona">
   <div class="wrap">
     <div class="section-head">
+      <span class="section-num">01 · como-funciona.sh</span>
       <h2>Como funciona</h2>
       <p>Três passos, do seu pedido ao site publicado.</p>
     </div>
@@ -408,6 +457,7 @@
 <section class="demo" id="demo">
   <div class="wrap">
     <div class="section-head">
+      <span class="section-num">02 · demonstracoes.json</span>
       <h2>Veja sites gerados de verdade</h2>
       <p>Três exemplos reais produzidos pelo nosso gerador, em ramos diferentes — o seu sai no mesmo padrão, com suas cores e seu conteúdo.</p>
     </div>
@@ -432,6 +482,7 @@
 <section id="pacotes">
   <div class="wrap">
     <div class="section-head">
+      <span class="section-num">03 · planos.json</span>
       <h2>Escolha seu plano</h2>
       <p>Pagamento único ou assinatura mensal — você decide. Clique em um plano para selecioná-lo no formulário abaixo.</p>
     </div>
@@ -443,6 +494,7 @@
 
     <div class="pacotes">
       <div class="pacote-card selecionado" data-pacote="basico" data-preco-unico="R$ 297" data-preco-mensal="R$ 39/mês">
+        <div class="ticket-head"><span class="numero">Nº 001</span><span class="status">disponível</span></div>
         <span class="tag">Básico</span>
         <h3>Site essencial</h3>
         <div class="preco">R$ 297</div>
@@ -454,6 +506,7 @@
         </ul>
       </div>
       <div class="pacote-card" data-pacote="intermediario" data-preco-unico="R$ 597" data-preco-mensal="R$ 79/mês">
+        <div class="ticket-head"><span class="numero">Nº 002</span><span class="status">disponível</span></div>
         <span class="tag">Intermediário</span>
         <h3>Mais completo</h3>
         <div class="preco">R$ 597</div>
@@ -465,6 +518,7 @@
         </ul>
       </div>
       <div class="pacote-card" data-pacote="catalogo" data-preco-unico="R$ 997" data-preco-mensal="R$ 129/mês">
+        <div class="ticket-head"><span class="numero">Nº 003</span><span class="status">disponível</span></div>
         <span class="tag">Catálogo</span>
         <h3>Com catálogo</h3>
         <div class="preco">R$ 997</div>
@@ -483,6 +537,7 @@
 <section class="form-section" id="pedido">
   <div class="wrap">
     <div class="section-head">
+      <span class="section-num">04 · pedido.sh</span>
       <h2>Peça seu site</h2>
       <p>Ao enviar, você vai direto para o pagamento. Assim que for aprovado, seu site é gerado e publicado.</p>
     </div>
