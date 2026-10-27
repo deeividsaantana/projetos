@@ -1,0 +1,13 @@
+{
+  "name": "automacao-funil-mei",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Webhook de pagamento (Mercado Pago) que gera e publica o site do cliente automaticamente.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
