@@ -2,10 +2,13 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const { URL } = require('url');
+const querystring = require('querystring');
 const { gerarEPublicar } = require('./gerar-e-publicar');
 const { criarPreferenciaPagamento } = require('./criar-preferencia');
 const { enviarMensagem } = require('./whatsapp');
 const { processarMensagem } = require('./lead-conversa');
+
+const PUBLIC_DIR = path.join(__dirname, 'public');
 
 const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN;
 const WHATSAPP_VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN;
@@ -89,8 +92,66 @@ async function tratarMensagemWhatsapp(telefone, texto) {
   }
 }
 
+/**
+ * Monta os dados do cliente a partir do formulário web (campos simples,
+ * mesmo formato usado pelo WhatsApp) e cria a preferência de pagamento.
+ */
+async function tratarPedidoFormulario(campos) {
+  const dadosCliente = {
+    nomeEmpresa: campos.nomeEmpresa,
+    ramoAtividade: campos.ramoAtividade,
+    cidade: campos.cidade,
+    whatsapp: campos.whatsapp,
+    email: campos.email || '',
+    slogan: campos.slogan || '',
+    sobre: campos.sobre || '',
+    servicos: (campos.servicosTexto || '')
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .map((nome) => ({ nome })),
+  };
+
+  const linkPagamento = await criarPreferenciaPagamento(dadosCliente, campos.pacote || 'basico');
+  registrarLog(
+    `Pedido via formulário web: preferência criada para "${dadosCliente.nomeEmpresa}" (${dadosCliente.whatsapp}): ${linkPagamento}`
+  );
+  return linkPagamento;
+}
+
 const servidor = http.createServer((req, res) => {
   const urlRequisicao = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+
+  if (req.method === 'GET' && (urlRequisicao.pathname === '/' || urlRequisicao.pathname === '/pedido')) {
+    fs.readFile(path.join(PUBLIC_DIR, 'pedido.html'), (erro, conteudo) => {
+      if (erro) {
+        res.writeHead(500);
+        res.end('Não foi possível carregar o formulário');
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(conteudo);
+    });
+    return;
+  }
+
+  if (req.method === 'POST' && urlRequisicao.pathname === '/pedido') {
+    let corpo = '';
+    req.on('data', (chunk) => (corpo += chunk));
+    req.on('end', async () => {
+      try {
+        const campos = querystring.parse(corpo);
+        const linkPagamento = await tratarPedidoFormulario(campos);
+        res.writeHead(302, { Location: linkPagamento });
+        res.end();
+      } catch (erro) {
+        registrarLog(`Falha ao processar pedido via formulário: ${erro.message}`);
+        res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
+        res.end('Não foi possível gerar seu link de pagamento. Tente novamente em instantes.');
+      }
+    });
+    return;
+  }
 
   if (req.method === 'GET' && urlRequisicao.pathname === '/webhook/whatsapp') {
     const modo = urlRequisicao.searchParams.get('hub.mode');

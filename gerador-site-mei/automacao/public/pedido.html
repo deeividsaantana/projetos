@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Peça seu site - Site para MEI</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #fafafa;
+      color: #222;
+      margin: 0;
+      padding: 24px 16px 60px;
+    }
+    .container { max-width: 520px; margin: 0 auto; }
+    h1 { font-size: 1.5rem; margin-bottom: 4px; }
+    p.subtitulo { color: #555; margin-top: 0; margin-bottom: 24px; }
+    form { background: #fff; border: 1px solid #eee; border-radius: 12px; padding: 24px; }
+    label { display: block; font-weight: 600; margin: 16px 0 6px; font-size: 0.9rem; }
+    label:first-of-type { margin-top: 0; }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+    textarea { min-height: 80px; resize: vertical; }
+    small { color: #777; display: block; margin-top: 4px; }
+    button {
+      width: 100%;
+      margin-top: 24px;
+      background: #1a7f5a;
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button:hover { background: #0d4f36; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Peça seu site</h1>
+    <p class="subtitulo">Preencha os dados abaixo. Ao enviar, você será levado direto para o pagamento via Pix no Mercado Pago. Assim que o pagamento for confirmado, seu site é gerado e publicado.</p>
+
+    <form method="POST" action="/pedido">
+      <label for="nomeEmpresa">Nome da empresa *</label>
+      <input type="text" id="nomeEmpresa" name="nomeEmpresa" required />
+
+      <label for="ramoAtividade">Ramo de atividade *</label>
+      <input type="text" id="ramoAtividade" name="ramoAtividade" placeholder="Ex: confeitaria, salão de beleza" required />
+
+      <label for="cidade">Cidade/Estado *</label>
+      <input type="text" id="cidade" name="cidade" placeholder="Ex: Campinas - SP" required />
+
+      <label for="whatsapp">WhatsApp (com DDD) *</label>
+      <input type="text" id="whatsapp" name="whatsapp" placeholder="(19) 99876-5432" required />
+
+      <label for="email">E-mail (opcional)</label>
+      <input type="email" id="email" name="email" />
+
+      <label for="slogan">Slogan curto (opcional)</label>
+      <input type="text" id="slogan" name="slogan" />
+
+      <label for="sobre">Sobre o negócio (opcional)</label>
+      <textarea id="sobre" name="sobre" placeholder="Um parágrafo curto sobre a empresa"></textarea>
+
+      <label for="servicosTexto">Serviços/produtos *</label>
+      <textarea id="servicosTexto" name="servicosTexto" placeholder="Separe por vírgula. Ex: Corte de cabelo, Manicure, Coloração" required></textarea>
+
+      <label for="pacote">Plano</label>
+      <select id="pacote" name="pacote">
+        <option value="basico">Básico - R$ 297</option>
+        <option value="intermediario">Intermediário - R$ 597</option>
+        <option value="catalogo">Catálogo - R$ 997</option>
+      </select>
+      <small>Depois de pagar, seu site é publicado automaticamente.</small>
+
+      <button type="submit">Ir para pagamento (Pix)</button>
+    </form>
+  </div>
+</body>
+</html>

@@ -1,21 +1,21 @@
-# Automação: WhatsApp → pagamento → geração → publicação
+# Automação: lead → pagamento → geração → publicação
 
-Este módulo fecha o funil inteiro, do primeiro contato do lead até o site publicado — você só entra para revisar o resultado antes de avisar o cliente.
+Este módulo fecha o funil inteiro, do primeiro contato do lead até o site publicado — você só entra para revisar o resultado antes de avisar o cliente. Tem **duas portas de entrada** para o lead, que terminam no mesmo lugar (cobrança Pix → site publicado):
 
-Fluxo:
+- **Formulário web** (`/pedido`): não depende de nenhuma aprovação externa, funciona assim que o servidor estiver no ar. Use este enquanto a conta do WhatsApp Business não estiver liberada.
+- **WhatsApp** (`/webhook/whatsapp`): depende de app aprovado na Meta (ver "Pré-requisitos").
+
+Fluxo (via formulário):
 
 ```
-Lead manda mensagem no WhatsApp
+Cliente preenche o formulário em /pedido
         │
         ▼
-server.js (/webhook/whatsapp) + lead-conversa.js
-   (faz as perguntas: empresa, ramo, cidade, serviços, e-mail)
+server.js (POST /pedido)  →  criar-preferencia.js
+   (cria cobrança Pix no Mercado Pago com os dados do cliente no metadata)
         │
         ▼
-criar-preferencia.js  →  cria cobrança Pix no Mercado Pago
-        │                 (dados do cliente vão no campo metadata)
-        ▼
-Link de pagamento enviado ao cliente pelo WhatsApp
+Cliente é redirecionado direto para a página de pagamento do Mercado Pago
         │
    (cliente paga)
         ▼
@@ -32,33 +32,32 @@ Link do site pronto, registrado em pedidos-processados.log
 (você revisa antes de enviar ao cliente)
 ```
 
+O WhatsApp, quando a conta estiver liberada, entra no mesmo funil só trocando a primeira etapa: em vez do formulário, `lead-conversa.js` coleta os dados por mensagem e já cai no mesmo `criar-preferencia.js`.
+
 ## Pré-requisitos (contas e tokens — isso só você consegue criar)
 
-1. **WhatsApp Business Platform (Cloud API)**, oficial da Meta:
-   - Criar um app em https://developers.facebook.com/apps, adicionar o produto "WhatsApp".
-   - Pegar `WHATSAPP_TOKEN` (token de acesso permanente, gerado depois de verificar o negócio) e `WHATSAPP_PHONE_NUMBER_ID` (no painel do app).
-   - Definir um `WHATSAPP_VERIFY_TOKEN` (qualquer string secreta escolhida por você) e cadastrá-lo no webhook do app.
-   - Isso exige verificação da empresa pela Meta — não é algo que eu consigo fazer por você.
-2. **Conta Mercado Pago** com Checkout Pix habilitado e `MP_ACCESS_TOKEN` (em https://www.mercadopago.com.br/developers/panel).
-3. **Conta Vercel** com `VERCEL_TOKEN` (em https://vercel.com/account/tokens).
-4. **Hospedagem para este servidor** (ele precisa ficar no ar 24/7 para receber os webhooks): Railway, Render, Fly.io ou similar. Não incluído aqui — é uma conta/decisão sua.
-5. Node.js 18+.
+1. **Conta Mercado Pago** com Checkout Pro/Pix habilitado e `MP_ACCESS_TOKEN` (em https://www.mercadopago.com.br/developers/panel).
+2. **Conta Vercel** com `VERCEL_TOKEN` (em https://vercel.com/account/tokens).
+3. **Hospedagem para este servidor** (ele precisa ficar no ar para receber os pedidos e os webhooks): Railway, Render, Fly.io ou similar. Não incluído aqui — é uma conta/decisão sua.
+4. Node.js 18+.
+5. **Opcional, para ativar o WhatsApp mais tarde:** WhatsApp Business Platform (Cloud API) oficial da Meta — criar um app em https://developers.facebook.com/apps, adicionar o produto "WhatsApp", pegar `WHATSAPP_TOKEN` e `WHATSAPP_PHONE_NUMBER_ID`, e definir um `WHATSAPP_VERIFY_TOKEN`. Exige verificação da empresa pela Meta (contas muito novas podem ser bloqueadas nesse passo até "amadurecerem"). Enquanto isso não libera, use o formulário web — o funil já funciona sem o WhatsApp.
 
 ```bash
 cd gerador-site-mei/automacao
 npm install
 ```
 
-Variáveis de ambiente necessárias:
+Variáveis de ambiente necessárias (as do WhatsApp são opcionais até a conta ser liberada):
 
 ```
-WHATSAPP_TOKEN=token_do_whatsapp_cloud_api
-WHATSAPP_PHONE_NUMBER_ID=id_do_numero_no_whatsapp
-WHATSAPP_VERIFY_TOKEN=uma_string_secreta_escolhida_por_voce
 MP_ACCESS_TOKEN=seu_token_mercado_pago
 VERCEL_TOKEN=seu_token_vercel
 VERCEL_TEAM_ID=            # opcional, se o projeto estiver em um time
 PORT=3000
+
+WHATSAPP_TOKEN=token_do_whatsapp_cloud_api
+WHATSAPP_PHONE_NUMBER_ID=id_do_numero_no_whatsapp
+WHATSAPP_VERIFY_TOKEN=uma_string_secreta_escolhida_por_voce
 ```
 
 ## Rodando
@@ -67,16 +66,22 @@ PORT=3000
 node server.js
 ```
 
-Depois de hospedar (com HTTPS), configure:
+O formulário fica em `http://localhost:3000/pedido` (ou na raiz `/`). Depois de hospedar (com HTTPS), mande esse link pros clientes (ex. como link na bio do Instagram, ou direto no WhatsApp pessoal enquanto o bot não está pronto).
+
+Quando o WhatsApp estiver liberado, configure também:
 
 - No painel do app do WhatsApp (Meta): webhook `https://seu-dominio/webhook/whatsapp`, campo `messages`, usando o mesmo `WHATSAPP_VERIFY_TOKEN`.
-- No painel do Mercado Pago: webhook `https://seu-dominio/webhook/mercadopago`, evento `payment`.
+- No painel do Mercado Pago: webhook `https://seu-dominio/webhook/mercadopago`, evento `payment` (necessário nos dois casos, formulário ou WhatsApp, pois é isso que dispara a geração do site).
 
-## Como a conversa funciona (`lead-conversa.js`)
+## Como o formulário funciona (`public/pedido.html`)
+
+Página HTML simples (sem framework) com os mesmos campos da conversa do WhatsApp: nome da empresa, ramo, cidade, WhatsApp, e-mail, slogan, sobre, serviços (separados por vírgula) e o plano desejado. Ao enviar, `server.js` cria a preferência no Mercado Pago e redireciona o navegador direto para a página de pagamento — sem passo intermediário.
+
+## Como a conversa do WhatsApp funciona (`lead-conversa.js`, quando ativado)
 
 Quando um lead manda qualquer mensagem (ex. "oi"), o bot inicia uma conversa simples que pergunta, em sequência: nome da empresa, ramo de atividade, cidade, serviços/produtos (separados por vírgula) e e-mail (opcional). Ao final, gera automaticamente o link de pagamento e envia pelo próprio WhatsApp.
 
-O pacote cobrado é o **Plano Básico (R$ 297)** por padrão — os preços de Intermediário e Catálogo já estão definidos em `criar-preferencia.js`, mas a escolha de pacote pelo cliente ainda não está na conversa (ver "Limitações" abaixo).
+No WhatsApp, o pacote cobrado é sempre o **Plano Básico (R$ 297)** — os preços de Intermediário e Catálogo já estão definidos em `criar-preferencia.js`, mas a escolha de pacote pelo cliente ainda não está na conversa (ver "Limitações" abaixo). No formulário web o cliente já escolhe o plano.
 
 ## O que ainda depende de você
 
