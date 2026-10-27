@@ -100,6 +100,17 @@
   }
   .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 34px; }
 
+  /* ---- selos de forma de pagamento ---- */
+  .payment-badges { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .payment-badges .lbl { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-faint); margin-right: 4px; }
+  .payment-badges .badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    height: 30px; padding: 0 10px; background: #fff; border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  }
+  .payment-badges .badge svg { display: block; height: 100%; }
+  .hero .payment-badges { margin-top: 22px; }
+
   .field-strip {
     margin: 56px 0 0;
     display: grid;
@@ -150,6 +161,34 @@
     .step-card { border-right: none; border-bottom: 1px solid var(--border); }
   }
 
+  /* ---- cards de catálogo da demo ---- */
+  .demo-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 28px; }
+  @media (max-width: 760px) { .demo-cards { grid-template-columns: 1fr; } }
+  .demo-card {
+    position: relative;
+    border: 1px solid var(--border-strong);
+    background: var(--panel);
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color .2s ease;
+  }
+  .demo-card.ativo { border-color: var(--violet); }
+  .demo-card .thumb {
+    height: 120px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--display); font-weight: 900; font-size: 2.4rem; text-transform: uppercase;
+    color: rgba(255,255,255,0.9);
+  }
+  .demo-card .thumb-1 { background: linear-gradient(135deg, #b566ff, #5b3fc4); }
+  .demo-card .thumb-2 { background: linear-gradient(135deg, #ff9a3c, #c75b1f); }
+  .demo-card .thumb-3 { background: linear-gradient(135deg, #7ee29a, #1f7a3a); }
+  .demo-card .info { padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .demo-card .cat { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-faint); }
+  .demo-card .nome { font-weight: 600; font-size: 0.92rem; margin-top: 4px; }
+  .demo-card .play {
+    font-family: var(--mono); font-size: 10px; color: var(--violet); white-space: nowrap;
+  }
+
   .demo-tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
   .demo-tab {
     border: 1px solid var(--border-strong); background: transparent; color: var(--ink-faint);
@@ -186,6 +225,13 @@
     transition: border-color 0.2s ease;
   }
   .pacote-card.selecionado { border-color: var(--violet); }
+  .pacote-card .ribbon {
+    position: absolute; top: -1px; right: -1px;
+    background: var(--violet); color: #0b0518;
+    font-family: var(--mono); font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .06em;
+    padding: 5px 10px;
+  }
   .ticket-stub {
     display: flex; align-items: center; justify-content: space-between;
     padding: 14px 18px;
@@ -206,6 +252,32 @@
   .pacote-card li::before { content: "— "; color: var(--violet); font-weight: 700; }
 
   .aviso-mensal { font-family: var(--mono); font-size: 0.82rem; color: var(--amber); margin-top: 20px; }
+
+  /* ---- avaliações ---- */
+  .avaliacao-aviso {
+    font-family: var(--mono); font-size: 0.78rem; color: var(--ink-faint);
+    border: 1px dashed var(--border-strong); padding: 10px 14px; margin-bottom: 28px; display: inline-block;
+  }
+  .avaliacoes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 900px) { .avaliacoes { grid-template-columns: 1fr; } }
+  .avaliacao-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 22px 22px 24px;
+  }
+  .estrelas { color: var(--amber); font-size: 0.95rem; letter-spacing: 2px; margin-bottom: 14px; }
+  .avaliacao-card p.depoimento { color: var(--ink-dim); font-size: 0.92rem; line-height: 1.55; margin-bottom: 18px; }
+  .avaliacao-card .quem { display: flex; align-items: center; gap: 10px; padding-top: 14px; border-top: 1px dashed var(--border); }
+  .avaliacao-card .avatar {
+    width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-weight: 700; font-size: 0.78rem; color: #0b0518;
+    background: var(--violet);
+  }
+  .avaliacao-card .nome-cliente { font-weight: 600; font-size: 0.88rem; }
+  .avaliacao-card .ramo-cliente { font-family: var(--mono); font-size: 0.72rem; color: var(--ink-faint); }
+
+  .checkout-seguro { font-family: var(--mono); font-size: 0.74rem; color: var(--ink-faint); margin-top: 12px; text-align: center; }
 
   /* ---- form ---- */
   .form-section { background: var(--panel); border-bottom: none; }
@@ -270,7 +342,8 @@
       <a href="#como-funciona"><span>01</span>como-funciona</a>
       <a href="#demo"><span>02</span>demonstracoes</a>
       <a href="#pacotes"><span>03</span>planos</a>
-      <a href="#pedido"><span>04</span>pedido</a>
+      <a href="#avaliacoes"><span>04</span>avaliações</a>
+      <a href="#pedido"><span>05</span>pedido</a>
     </nav>
     <a class="btn btn-solid" href="#pedido">Pedir meu site</a>
   </div>
@@ -284,6 +357,22 @@
     <div class="hero-ctas">
       <a class="btn btn-solid" href="#pedido">Quero meu site agora</a>
       <a class="btn btn-ghost" href="#demo">Ver demonstração</a>
+    </div>
+
+    <div class="payment-badges">
+      <span class="lbl">Formas de pagamento aceitas:</span>
+      <span class="badge" title="Pix">
+        <svg width="34" height="20" viewBox="0 0 34 20"><g fill="none" stroke="#32BCAD" stroke-width="2" stroke-linejoin="round"><path d="M17 3l4 4-4 4-4-4z"/><path d="M17 9l4 4-4 4-4-4z"/></g><text x="24" y="14" font-family="Arial, sans-serif" font-weight="700" font-size="9" fill="#32BCAD">Pix</text></svg>
+      </span>
+      <span class="badge" title="Visa">
+        <svg width="40" height="20" viewBox="0 0 40 20"><rect width="40" height="20" rx="2" fill="#1434CB"/><text x="20" y="14.5" text-anchor="middle" font-family="Arial, sans-serif" font-style="italic" font-weight="800" font-size="10" fill="#fff">VISA</text></svg>
+      </span>
+      <span class="badge" title="Mastercard">
+        <svg width="34" height="20" viewBox="0 0 34 20"><circle cx="13" cy="10" r="7.5" fill="#EB001B"/><circle cx="21" cy="10" r="7.5" fill="#F79E1B" opacity="0.9"/></svg>
+      </span>
+      <span class="badge" title="Boleto">
+        <svg width="34" height="20" viewBox="0 0 34 20"><g fill="#2b2b2b"><rect x="2" y="3" width="1.4" height="14"/><rect x="5" y="3" width="2.4" height="14"/><rect x="9" y="3" width="1.4" height="14"/><rect x="12" y="3" width="1.4" height="14"/><rect x="15" y="3" width="2.4" height="14"/><rect x="19" y="3" width="1.4" height="14"/><rect x="22" y="3" width="2.4" height="14"/><rect x="26" y="3" width="1.4" height="14"/><rect x="29" y="3" width="1.4" height="14"/></g></svg>
+      </span>
     </div>
 
     <dl class="field-strip">
@@ -322,6 +411,21 @@
     <div class="sec-head">
       <h2>Demons-<br />trações</h2>
       <span class="sec-aside">Três exemplos reais produzidos pelo gerador — o seu sai no mesmo padrão, com suas cores e conteúdo.</span>
+    </div>
+
+    <div class="demo-cards">
+      <div class="demo-card ativo" data-exemplo="1" data-url="doce-sabor-confeitaria.vercel.app">
+        <div class="thumb thumb-1">DS</div>
+        <div class="info"><div><div class="cat">Confeitaria</div><div class="nome">Doce Sabor</div></div><span class="play">ver ▸</span></div>
+      </div>
+      <div class="demo-card" data-exemplo="2" data-url="studio-bella-hair.vercel.app">
+        <div class="thumb thumb-2">SB</div>
+        <div class="info"><div><div class="cat">Salão de beleza</div><div class="nome">Studio Bella Hair</div></div><span class="play">ver ▸</span></div>
+      </div>
+      <div class="demo-card" data-exemplo="3" data-url="casa-estilo-decor.vercel.app">
+        <div class="thumb thumb-3">CE</div>
+        <div class="info"><div><div class="cat">Loja de decoração</div><div class="nome">Casa & Estilo</div></div><span class="play">ver ▸</span></div>
+      </div>
     </div>
 
     <div class="demo-tabs">
@@ -369,6 +473,7 @@
         </div>
       </div>
       <div class="pacote-card" data-pacote="intermediario" data-preco-unico="R$ 597" data-preco-mensal="R$ 79/mês">
+        <span class="ribbon">Mais escolhido</span>
         <div class="ticket-stub"><span>Nº 002</span><span class="status">disponível</span></div>
         <div class="ticket-body">
           <span class="tag">Intermediário</span>
@@ -398,6 +503,42 @@
       </div>
     </div>
     <p class="aviso-mensal" hidden>// assinatura mensal exige e-mail — é pra onde vai a cobrança recorrente.</p>
+  </div>
+</section>
+
+<section class="block" id="avaliacoes">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Avalia-<br />ções</h2>
+      <span class="sec-aside">Negócio novo — estes depoimentos são exemplos ilustrativos do formato, não clientes reais ainda.</span>
+    </div>
+    <span class="avaliacao-aviso">// exemplo — substitua pelos depoimentos reais assim que tiver os primeiros clientes</span>
+    <div class="avaliacoes">
+      <div class="avaliacao-card">
+        <div class="estrelas">★★★★★</div>
+        <p class="depoimento">"Preenchi o formulário de manhã e à tarde já tinha o link pra mandar pros clientes. Não imaginei que fosse tão rápido."</p>
+        <div class="quem">
+          <div class="avatar">CE</div>
+          <div><div class="nome-cliente">Exemplo — Confeitaria</div><div class="ramo-cliente">plano básico</div></div>
+        </div>
+      </div>
+      <div class="avaliacao-card">
+        <div class="estrelas">★★★★★</div>
+        <p class="depoimento">"Paguei no Pix e o site já estava no ar antes de eu terminar o café. Serviço direto ao ponto."</p>
+        <div class="quem">
+          <div class="avatar">SB</div>
+          <div><div class="nome-cliente">Exemplo — Salão de beleza</div><div class="ramo-cliente">plano intermediário</div></div>
+        </div>
+      </div>
+      <div class="avaliacao-card">
+        <div class="estrelas">★★★★★</div>
+        <p class="depoimento">"Gostei de poder escolher entre pagar uma vez ou assinar por mês. Ficou dentro do orçamento da loja."</p>
+        <div class="quem">
+          <div class="avatar">CD</div>
+          <div><div class="nome-cliente">Exemplo — Loja de decoração</div><div class="ramo-cliente">plano catálogo</div></div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -459,7 +600,22 @@
           <button type="button" class="toggle-opcao" data-tipo="mensal">Assinatura mensal</button>
         </div>
       </div>
+      <div class="payment-badges" style="margin: 18px 0 14px;">
+        <span class="badge" title="Pix">
+          <svg width="34" height="20" viewBox="0 0 34 20"><g fill="none" stroke="#32BCAD" stroke-width="2" stroke-linejoin="round"><path d="M17 3l4 4-4 4-4-4z"/><path d="M17 9l4 4-4 4-4-4z"/></g><text x="24" y="14" font-family="Arial, sans-serif" font-weight="700" font-size="9" fill="#32BCAD">Pix</text></svg>
+        </span>
+        <span class="badge" title="Visa">
+          <svg width="40" height="20" viewBox="0 0 40 20"><rect width="40" height="20" rx="2" fill="#1434CB"/><text x="20" y="14.5" text-anchor="middle" font-family="Arial, sans-serif" font-style="italic" font-weight="800" font-size="10" fill="#fff">VISA</text></svg>
+        </span>
+        <span class="badge" title="Mastercard">
+          <svg width="34" height="20" viewBox="0 0 34 20"><circle cx="13" cy="10" r="7.5" fill="#EB001B"/><circle cx="21" cy="10" r="7.5" fill="#F79E1B" opacity="0.9"/></svg>
+        </span>
+        <span class="badge" title="Boleto">
+          <svg width="34" height="20" viewBox="0 0 34 20"><g fill="#2b2b2b"><rect x="2" y="3" width="1.4" height="14"/><rect x="5" y="3" width="2.4" height="14"/><rect x="9" y="3" width="1.4" height="14"/><rect x="12" y="3" width="1.4" height="14"/><rect x="15" y="3" width="2.4" height="14"/><rect x="19" y="3" width="1.4" height="14"/><rect x="22" y="3" width="2.4" height="14"/><rect x="26" y="3" width="1.4" height="14"/><rect x="29" y="3" width="1.4" height="14"/></g></svg>
+        </span>
+      </div>
       <button type="submit" id="botao-pagar">Ir para pagamento (Pix)</button>
+      <p class="checkout-seguro">// checkout processado com segurança pelo Mercado Pago</p>
     </form>
   </div>
 </section>
@@ -522,22 +678,42 @@
   submitBtn.addEventListener('mouseenter', () => gsap.to(submitBtn, { scale: 1.02, duration: 0.2 }));
   submitBtn.addEventListener('mouseleave', () => gsap.to(submitBtn, { scale: 1, duration: 0.2 }));
 
-  // --- Abas de demonstração (troca o iframe entre os 3 exemplos) ---
+  // --- Abas e cards de demonstração (troca o iframe entre os 3 exemplos) ---
+  function mostrarExemplo(n, url) {
+    const caminho = `/exemplo/${n}/`;
+    document.querySelectorAll('.demo-tab').forEach((t) => t.classList.toggle('ativo', t.dataset.exemplo === n));
+    document.querySelectorAll('.demo-card').forEach((c) => c.classList.toggle('ativo', c.dataset.exemplo === n));
+    document.getElementById('demo-url').textContent = url;
+    document.getElementById('demo-abrir').href = caminho;
+    const iframe = document.getElementById('demo-iframe');
+    gsap.to(iframe, {
+      opacity: 0, duration: 0.15, onComplete: () => {
+        iframe.src = caminho;
+        gsap.to(iframe, { opacity: 1, duration: 0.3 });
+      },
+    });
+  }
   document.querySelectorAll('.demo-tab').forEach((tab) => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.demo-tab').forEach((t) => t.classList.remove('ativo'));
-      tab.classList.add('ativo');
-      const n = tab.dataset.exemplo;
-      const caminho = `/exemplo/${n}/`;
-      document.getElementById('demo-url').textContent = tab.dataset.url;
-      document.getElementById('demo-abrir').href = caminho;
-      const iframe = document.getElementById('demo-iframe');
-      gsap.to(iframe, {
-        opacity: 0, duration: 0.15, onComplete: () => {
-          iframe.src = caminho;
-          gsap.to(iframe, { opacity: 1, duration: 0.3 });
-        },
-      });
+    tab.addEventListener('click', () => mostrarExemplo(tab.dataset.exemplo, tab.dataset.url));
+  });
+  document.querySelectorAll('.demo-card').forEach((card) => {
+    card.addEventListener('click', () => {
+      mostrarExemplo(card.dataset.exemplo, card.dataset.url);
+      gsap.fromTo(card, { scale: 0.98 }, { scale: 1, duration: 0.3, ease: 'back.out(2)' });
+    });
+  });
+
+  gsap.utils.toArray('.demo-card').forEach((card, i) => {
+    gsap.from(card, {
+      scrollTrigger: { trigger: card, start: 'top 88%' },
+      y: 24, opacity: 0, duration: 0.5, delay: i * 0.08, ease: 'power2.out',
+    });
+  });
+
+  gsap.utils.toArray('.avaliacao-card').forEach((card, i) => {
+    gsap.from(card, {
+      scrollTrigger: { trigger: card, start: 'top 88%' },
+      y: 24, opacity: 0, duration: 0.5, delay: i * 0.08, ease: 'power2.out',
     });
   });
 
