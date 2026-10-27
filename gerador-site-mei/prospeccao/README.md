@@ -71,6 +71,33 @@ de WhatsApp → pagamento → geração → publicação.
 > depois do pagamento — a partir de R$ 297 (ou R$ 39/mês). Quer ver um
 > exemplo?
 
+## Fechamento: quando o lead responde que quer
+
+Quando o lead responde no seu WhatsApp pessoal dizendo que quer o site,
+não precisa mandar ele pro formulário — gera o link de pagamento direto:
+
+```bash
+cd gerador-site-mei/prospeccao
+node fechar-venda.js --lead leads/salao-de-beleza-campinas.json --indice 2 \
+  --servicos "Corte,Manicure,Coloração" --pacote intermediario --pagamento unico
+```
+
+`--lead` + `--indice` preenchem nome/telefone/cidade/ramo a partir do
+arquivo de leads (índice é a posição no array, começando em 0). Só falta
+`--servicos` (o que o negócio oferece — pergunte na conversa) e, se quiser,
+`--pacote` (`basico`/`intermediario`/`catalogo`, padrão `basico`) e
+`--pagamento` (`unico`/`mensal`, padrão `unico` — `mensal` exige `--email`
+porque a assinatura cobra recorrente nesse e-mail).
+
+Sem `--lead`, dá pra passar os dados direto: `--nome`, `--ramo`, `--cidade`,
+`--whatsapp`.
+
+O script usa o mesmo `criar-preferencia.js`/`criar-assinatura.js` do
+`automacao/` — precisa do `MP_ACCESS_TOKEN` configurado (mesmo token do
+Mercado Pago já usado lá). O link sai pronto pra colar na conversa; depois
+que o lead paga, o mesmo webhook do `automacao/` (`/webhook/mercadopago`)
+gera e publica o site automaticamente, igual no funil do formulário.
+
 ## Avisos (LGPD / Marco Civil)
 
 - Os dados usados (nome do negócio, telefone, endereço) são informações
