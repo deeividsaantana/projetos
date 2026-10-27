@@ -9,6 +9,7 @@ const { enviarMensagem } = require('./whatsapp');
 const { processarMensagem } = require('./lead-conversa');
 
 const PUBLIC_DIR = path.join(__dirname, 'public');
+const EXEMPLO_DIR = path.join(__dirname, '..', 'exemplo', 'saida');
 
 const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN;
 const WHATSAPP_VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN;
@@ -121,6 +122,32 @@ async function tratarPedidoFormulario(campos) {
 
 const servidor = http.createServer((req, res) => {
   const urlRequisicao = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+
+  if (req.method === 'GET' && (urlRequisicao.pathname === '/exemplo' || urlRequisicao.pathname === '/exemplo/')) {
+    fs.readFile(path.join(EXEMPLO_DIR, 'index.html'), (erro, conteudo) => {
+      if (erro) {
+        res.writeHead(404);
+        res.end('Exemplo não encontrado');
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(conteudo);
+    });
+    return;
+  }
+
+  if (req.method === 'GET' && urlRequisicao.pathname === '/exemplo/style.css') {
+    fs.readFile(path.join(EXEMPLO_DIR, 'style.css'), (erro, conteudo) => {
+      if (erro) {
+        res.writeHead(404);
+        res.end('not found');
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': 'text/css; charset=utf-8' });
+      res.end(conteudo);
+    });
+    return;
+  }
 
   if (req.method === 'GET' && (urlRequisicao.pathname === '/' || urlRequisicao.pathname === '/pedido')) {
     fs.readFile(path.join(PUBLIC_DIR, 'pedido.html'), (erro, conteudo) => {
