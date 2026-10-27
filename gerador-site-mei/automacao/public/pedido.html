@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Site para MEI - Seu site pronto em minutos</title>
+<meta name="description" content="Peça seu site profissional, pague via Pix e receba publicado automaticamente." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+  :root {
+    --bg: #0b0a10;
+    --panel: #14121c;
+    --elev: #1c1928;
+    --border: rgba(255,255,255,0.10);
+    --border-strong: rgba(255,255,255,0.22);
+    --ink: #f1edf8;
+    --ink-dim: #a39db4;
+    --ink-faint: #8a849a;
+    --violet: #b566ff;
+    --amber: #ff9a3c;
+    --ok: #7ee29a;
+    --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+    --body: "IBM Plex Sans", system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--body);
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+  a { color: inherit; }
+
+  /* ---- header ---- */
+  header.bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    background: rgba(11,10,16,0.82);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  header.bar .wrap { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; }
+  .monogram { font-family: var(--display); font-weight: 900; font-size: 24px; letter-spacing: .02em; line-height: 1; }
+  .monogram span { color: var(--violet); }
+  .index { display: flex; align-items: center; gap: 26px; }
+  .index a { font-family: var(--mono); font-size: 12px; color: var(--ink-faint); text-decoration: none; white-space: nowrap; transition: color .2s; }
+  .index a span { color: var(--violet); margin-right: 4px; }
+  .index a:hover { color: var(--ink); }
+  @media (max-width: 760px) { .index { display: none; } }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 13px 22px;
+    font-family: var(--mono); font-size: 12.5px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: .06em;
+    border: 1.5px solid transparent;
+    cursor: pointer; text-decoration: none;
+    border-radius: 0;
+    transition: background .2s, color .2s, border-color .2s;
+  }
+  .btn-solid { background: var(--violet); color: #0b0518; }
+  .btn-solid:hover { background: #c687ff; }
+  .btn-ghost { border-color: var(--border-strong); color: var(--ink); background: transparent; }
+  .btn-ghost:hover { border-color: var(--ink); }
+
+  /* ---- hero ---- */
+  .hero { position: relative; padding: 150px 0 70px; overflow: hidden; }
+  .hero::before {
+    content: "";
+    position: absolute; inset: -20% -10%;
+    background: radial-gradient(circle at 15% 10%, rgba(181,102,255,0.14), transparent 45%);
+    pointer-events: none; z-index: -1;
+  }
+  .sec-no { font-family: var(--mono); font-size: 12px; color: var(--violet); display: block; margin-bottom: 18px; }
+  .sec-no::before { content: "// "; color: var(--ink-faint); }
+  .hero h1 {
+    font-family: var(--display);
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: .92;
+    letter-spacing: -.005em;
+    font-size: clamp(2.6rem, 8vw, 6.4rem);
+    max-width: 920px;
+  }
+  .hero h1 .accent { color: var(--violet); }
+  .hero p.lead {
+    margin-top: 26px;
+    color: var(--ink-dim);
+    font-size: 1.1rem;
+    max-width: 560px;
+    line-height: 1.6;
+  }
+  .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 34px; }
+
+  /* ---- selos de forma de pagamento ---- */
+  .payment-badges { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .payment-badges .lbl { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-faint); margin-right: 4px; }
+  .payment-badges .badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    height: 30px; padding: 0 10px; background: #fff; border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  }
+  .payment-badges .badge svg { display: block; height: 100%; }
+  .hero .payment-badges { margin-top: 22px; }
+
+  .field-strip {
+    margin: 56px 0 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border: 1px solid var(--border-strong);
+    background: rgba(11,10,16,0.55);
+  }
+  .field-strip > div { padding: 18px 20px; border-right: 1px solid var(--border); }
+  .field-strip > div:last-child { border-right: none; }
+  .field-strip dt { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .1em; color: var(--ink-faint); margin-bottom: 8px; }
+  .field-strip dd { font-size: 15px; font-weight: 600; }
+  .field-strip .live dd::before {
+    content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+    background: var(--amber); margin-right: 8px; vertical-align: 1px;
+    box-shadow: 0 0 0 3px rgba(255,154,60,0.2);
+  }
+  @media (max-width: 760px) {
+    .field-strip { grid-template-columns: 1fr 1fr; }
+    .field-strip > div:nth-child(2) { border-right: none; }
+    .field-strip > div:nth-child(-n+2) { border-bottom: 1px solid var(--border); }
+  }
+
+  /* ---- hero preview mockup ---- */
+  .hero-mockup { margin-top: 56px; border: 1px solid var(--border); background: var(--panel); }
+  .browser-bar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  .browser-bar i { width: 9px; height: 9px; border-radius: 50%; background: var(--border-strong); display: block; }
+  .browser-bar .url { margin-left: 10px; font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); }
+  .hero-mockup iframe { width: 100%; height: 420px; border: none; display: block; pointer-events: none; }
+
+  /* ---- sections ---- */
+  section.block { padding-block: 84px; border-bottom: 1px solid var(--border); }
+  .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 44px; }
+  .sec-head h2 {
+    font-family: var(--display); font-weight: 800; text-transform: uppercase;
+    font-size: clamp(1.9rem, 4.6vw, 3rem); line-height: .95; letter-spacing: .005em;
+  }
+  .sec-aside { margin-left: auto; font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); max-width: 320px; text-align: right; }
+  @media (max-width: 760px) { .sec-aside { text-align: left; margin-left: 0; } }
+
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid var(--border-strong); }
+  .step-card { padding: 28px 24px; border-right: 1px solid var(--border); }
+  .step-card:last-child { border-right: none; }
+  .step-num { font-family: var(--mono); font-size: 12px; color: var(--violet); margin-bottom: 14px; }
+  .step-card h3 { font-family: var(--body); font-weight: 600; font-size: 1.05rem; margin-bottom: 8px; }
+  .step-card p { color: var(--ink-dim); font-size: 0.92rem; line-height: 1.55; }
+  @media (max-width: 760px) {
+    .steps { grid-template-columns: 1fr; }
+    .step-card { border-right: none; border-bottom: 1px solid var(--border); }
+  }
+
+  /* ---- cards de catálogo da demo ---- */
+  .demo-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 28px; }
+  @media (max-width: 760px) { .demo-cards { grid-template-columns: 1fr; } }
+  .demo-card {
+    position: relative;
+    border: 1px solid var(--border-strong);
+    background: var(--panel);
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color .2s ease;
+  }
+  .demo-card.ativo { border-color: var(--violet); }
+  .demo-card .thumb {
+    height: 120px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--display); font-weight: 900; font-size: 2.4rem; text-transform: uppercase;
+    color: rgba(255,255,255,0.9);
+  }
+  .demo-card .thumb-1 { background: linear-gradient(135deg, #b566ff, #5b3fc4); }
+  .demo-card .thumb-2 { background: linear-gradient(135deg, #ff9a3c, #c75b1f); }
+  .demo-card .thumb-3 { background: linear-gradient(135deg, #7ee29a, #1f7a3a); }
+  .demo-card .info { padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .demo-card .cat { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-faint); }
+  .demo-card .nome { font-weight: 600; font-size: 0.92rem; margin-top: 4px; }
+  .demo-card .play {
+    font-family: var(--mono); font-size: 10px; color: var(--violet); white-space: nowrap;
+  }
+
+  .demo-tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+  .demo-tab {
+    border: 1px solid var(--border-strong); background: transparent; color: var(--ink-faint);
+    font-family: var(--mono); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: .04em;
+    padding: 9px 16px; cursor: pointer; border-radius: 0;
+  }
+  .demo-tab.ativo { background: var(--violet); color: #0b0518; border-color: transparent; }
+  .demo-frame-wrap { border: 1px solid var(--border); background: var(--panel); }
+  .demo iframe { width: 100%; height: 560px; border: none; display: block; }
+  .demo-caption { margin-top: 16px; color: var(--ink-faint); font-size: 0.88rem; font-family: var(--mono); }
+  .demo-caption a { color: var(--violet); text-decoration: none; font-weight: 600; }
+
+  .toggle-pagamento {
+    display: inline-flex; gap: 0; border: 1px solid var(--border-strong); width: fit-content; margin-bottom: 36px;
+  }
+  .toggle-opcao {
+    border: none; background: transparent; color: var(--ink-faint);
+    font-family: var(--mono); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: .04em;
+    padding: 11px 18px; cursor: pointer;
+  }
+  .toggle-opcao.ativo { background: var(--violet); color: #0b0518; }
+  .toggle-pagamento--form { margin: 8px 0 0; }
+
+  /* ---- ticket style package cards ---- */
+  .pacotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 900px) { .pacotes { grid-template-columns: 1fr; } }
+  .pacote-card {
+    position: relative;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 0;
+    padding: 0;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+  }
+  .pacote-card.selecionado { border-color: var(--violet); }
+  .pacote-card .ribbon {
+    position: absolute; top: -1px; right: -1px;
+    background: var(--violet); color: #0b0518;
+    font-family: var(--mono); font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .06em;
+    padding: 5px 10px;
+  }
+  .ticket-stub {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 2px dashed var(--border-strong);
+    font-family: var(--mono); font-size: 11px; color: var(--ink-faint); letter-spacing: .06em;
+  }
+  .ticket-stub .status {
+    color: var(--ink-faint); border: 1.5px solid currentColor; border-radius: 4px; padding: 3px 8px;
+    font-size: 10px; text-transform: uppercase; letter-spacing: .08em;
+  }
+  .pacote-card.selecionado .ticket-stub .status { color: var(--violet); }
+  .pacote-card .ticket-body { padding: 24px 22px 28px; }
+  .pacote-card .tag { color: var(--violet); font-size: 0.74rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; font-family: var(--mono); }
+  .pacote-card h3 { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: 1.5rem; margin: 10px 0 6px; }
+  .pacote-card .preco { font-family: var(--mono); font-size: 1.7rem; font-weight: 700; margin-bottom: 18px; color: var(--ink); }
+  .pacote-card .preco span { font-size: 0.85rem; color: var(--ink-faint); font-weight: 500; }
+  .pacote-card ul { list-style: none; color: var(--ink-dim); font-size: 0.88rem; display: flex; flex-direction: column; gap: 9px; padding-top: 14px; border-top: 1px dashed var(--border); }
+  .pacote-card li::before { content: "— "; color: var(--violet); font-weight: 700; }
+
+  .aviso-mensal { font-family: var(--mono); font-size: 0.82rem; color: var(--amber); margin-top: 20px; }
+
+  /* ---- avaliações ---- */
+  .avaliacao-aviso {
+    font-family: var(--mono); font-size: 0.78rem; color: var(--ink-faint);
+    border: 1px dashed var(--border-strong); padding: 10px 14px; margin-bottom: 28px; display: inline-block;
+  }
+  .avaliacoes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 900px) { .avaliacoes { grid-template-columns: 1fr; } }
+  .avaliacao-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 22px 22px 24px;
+  }
+  .estrelas { color: var(--amber); font-size: 0.95rem; letter-spacing: 2px; margin-bottom: 14px; }
+  .avaliacao-card p.depoimento { color: var(--ink-dim); font-size: 0.92rem; line-height: 1.55; margin-bottom: 18px; }
+  .avaliacao-card .quem { display: flex; align-items: center; gap: 10px; padding-top: 14px; border-top: 1px dashed var(--border); }
+  .avaliacao-card .avatar {
+    width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-weight: 700; font-size: 0.78rem; color: #0b0518;
+    background: var(--violet);
+  }
+  .avaliacao-card .nome-cliente { font-weight: 600; font-size: 0.88rem; }
+  .avaliacao-card .ramo-cliente { font-family: var(--mono); font-size: 0.72rem; color: var(--ink-faint); }
+
+  .checkout-seguro { font-family: var(--mono); font-size: 0.74rem; color: var(--ink-faint); margin-top: 12px; text-align: center; }
+
+  /* ---- form ---- */
+  .form-section { background: var(--panel); border-bottom: none; }
+  form.pedido-form {
+    background: var(--bg);
+    border: 1px solid var(--border-strong);
+    padding: 40px;
+    max-width: 620px;
+  }
+  .campo { margin-bottom: 20px; opacity: 0; transform: translateY(14px); }
+  .campo label {
+    display: block; font-family: var(--mono); font-weight: 600; font-size: 0.74rem;
+    text-transform: uppercase; letter-spacing: .06em; color: var(--ink-faint); margin-bottom: 8px;
+  }
+  .campo small { display: block; color: var(--ink-faint); font-size: 0.76rem; margin-top: 6px; font-family: var(--mono); }
+  input, select, textarea {
+    width: 100%;
+    background: var(--panel);
+    border: 1px solid var(--border-strong);
+    border-radius: 0;
+    color: var(--ink);
+    padding: 12px 14px;
+    font-size: 0.98rem;
+    font-family: var(--body);
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--violet); }
+  textarea { min-height: 90px; resize: vertical; }
+  button[type="submit"] {
+    width: 100%;
+    margin-top: 12px;
+    background: var(--violet);
+    color: #0b0518;
+    border: none;
+    border-radius: 0;
+    padding: 16px;
+    font-family: var(--mono);
+    font-size: 0.92rem;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  button[type="submit"]:active { transform: scale(0.99); }
+
+  footer {
+    padding: 34px 24px;
+    color: var(--ink-faint);
+    font-size: 0.82rem;
+    font-family: var(--mono);
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+  }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <div class="monogram">SITE<span>MEI</span></div>
+    <nav class="index">
+      <a href="#como-funciona"><span>01</span>como-funciona</a>
+      <a href="#demo"><span>02</span>demonstracoes</a>
+      <a href="#pacotes"><span>03</span>planos</a>
+      <a href="#avaliacoes"><span>04</span>avaliações</a>
+      <a href="#pedido"><span>05</span>pedido</a>
+    </nav>
+    <a class="btn btn-solid" href="#pedido">Pedir meu site</a>
+  </div>
+</header>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="sec-no">pedido.status → aberto</span>
+    <h1>Seu site no ar<br /><span class="accent">em minutos</span>, não semanas</h1>
+    <p class="lead">Preencha seus dados, pague via Pix e o site já sai gerado e publicado automaticamente — sem agência, sem espera.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-solid" href="#pedido">Quero meu site agora</a>
+      <a class="btn btn-ghost" href="#demo">Ver demonstração</a>
+    </div>
+
+    <div class="payment-badges">
+      <span class="lbl">Formas de pagamento aceitas:</span>
+      <span class="badge" title="Pix">
+        <svg width="34" height="20" viewBox="0 0 34 20"><g fill="none" stroke="#32BCAD" stroke-width="2" stroke-linejoin="round"><path d="M17 3l4 4-4 4-4-4z"/><path d="M17 9l4 4-4 4-4-4z"/></g><text x="24" y="14" font-family="Arial, sans-serif" font-weight="700" font-size="9" fill="#32BCAD">Pix</text></svg>
+      </span>
+      <span class="badge" title="Visa">
+        <svg width="40" height="20" viewBox="0 0 40 20"><rect width="40" height="20" rx="2" fill="#1434CB"/><text x="20" y="14.5" text-anchor="middle" font-family="Arial, sans-serif" font-style="italic" font-weight="800" font-size="10" fill="#fff">VISA</text></svg>
+      </span>
+      <span class="badge" title="Mastercard">
+        <svg width="34" height="20" viewBox="0 0 34 20"><circle cx="13" cy="10" r="7.5" fill="#EB001B"/><circle cx="21" cy="10" r="7.5" fill="#F79E1B" opacity="0.9"/></svg>
+      </span>
+      <span class="badge" title="Boleto">
+        <svg width="34" height="20" viewBox="0 0 34 20"><g fill="#2b2b2b"><rect x="2" y="3" width="1.4" height="14"/><rect x="5" y="3" width="2.4" height="14"/><rect x="9" y="3" width="1.4" height="14"/><rect x="12" y="3" width="1.4" height="14"/><rect x="15" y="3" width="2.4" height="14"/><rect x="19" y="3" width="1.4" height="14"/><rect x="22" y="3" width="2.4" height="14"/><rect x="26" y="3" width="1.4" height="14"/><rect x="29" y="3" width="1.4" height="14"/></g></svg>
+      </span>
+    </div>
+
+    <dl class="field-strip">
+      <div><dt>Entrega</dt><dd>100% automática</dd></div>
+      <div><dt>Pagamento</dt><dd>Pix / cartão / boleto</dd></div>
+      <div><dt>Prazo</dt><dd>Minutos</dd></div>
+      <div class="live"><dt>Status</dt><dd>Disponível</dd></div>
+    </dl>
+
+    <div class="hero-mockup">
+      <div class="browser-bar">
+        <i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i>
+        <span class="url">doce-sabor-confeitaria.vercel.app</span>
+      </div>
+      <iframe src="/exemplo/1/" title="Prévia de site gerado" loading="lazy" tabindex="-1"></iframe>
+    </div>
+  </div>
+</header>
+
+<section class="block" id="como-funciona">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Como<br />funciona</h2>
+      <span class="sec-aside">Três passos, do seu pedido ao site publicado.</span>
+    </div>
+    <div class="steps">
+      <div class="step-card"><div class="step-num">01</div><h3>Você preenche o formulário</h3><p>Nome da empresa, ramo, cidade, serviços e contato. Leva menos de 2 minutos.</p></div>
+      <div class="step-card"><div class="step-num">02</div><h3>Paga como preferir</h3><p>Checkout seguro do Mercado Pago — Pix, cartão ou boleto, confirmação automática.</p></div>
+      <div class="step-card"><div class="step-num">03</div><h3>Seu site vai ao ar</h3><p>Gerado e publicado automaticamente, pronto para compartilhar com seus clientes.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="block demo" id="demo">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Demons-<br />trações</h2>
+      <span class="sec-aside">Três exemplos reais produzidos pelo gerador — o seu sai no mesmo padrão, com suas cores e conteúdo.</span>
+    </div>
+
+    <div class="demo-cards">
+      <div class="demo-card ativo" data-exemplo="1" data-url="doce-sabor-confeitaria.vercel.app">
+        <div class="thumb thumb-1">DS</div>
+        <div class="info"><div><div class="cat">Confeitaria</div><div class="nome">Doce Sabor</div></div><span class="play">ver ▸</span></div>
+      </div>
+      <div class="demo-card" data-exemplo="2" data-url="studio-bella-hair.vercel.app">
+        <div class="thumb thumb-2">SB</div>
+        <div class="info"><div><div class="cat">Salão de beleza</div><div class="nome">Studio Bella Hair</div></div><span class="play">ver ▸</span></div>
+      </div>
+      <div class="demo-card" data-exemplo="3" data-url="casa-estilo-decor.vercel.app">
+        <div class="thumb thumb-3">CE</div>
+        <div class="info"><div><div class="cat">Loja de decoração</div><div class="nome">Casa & Estilo</div></div><span class="play">ver ▸</span></div>
+      </div>
+    </div>
+
+    <div class="demo-tabs">
+      <button type="button" class="demo-tab ativo" data-exemplo="1" data-url="doce-sabor-confeitaria.vercel.app">Confeitaria</button>
+      <button type="button" class="demo-tab" data-exemplo="2" data-url="studio-bella-hair.vercel.app">Salão de beleza</button>
+      <button type="button" class="demo-tab" data-exemplo="3" data-url="casa-estilo-decor.vercel.app">Loja de decoração</button>
+    </div>
+
+    <div class="demo-frame-wrap">
+      <div class="browser-bar">
+        <i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i>
+        <span class="url" id="demo-url">doce-sabor-confeitaria.vercel.app</span>
+      </div>
+      <iframe id="demo-iframe" src="/exemplo/1/" title="Exemplo de site gerado" loading="lazy"></iframe>
+    </div>
+    <p class="demo-caption">Esses sites foram gerados a partir de um formulário igual ao que você vai preencher. <a id="demo-abrir" href="/exemplo/1/" target="_blank" rel="noopener">abrir em tela cheia →</a></p>
+  </div>
+</section>
+
+<section class="block" id="pacotes">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Escolha<br />seu plano</h2>
+      <span class="sec-aside">Pagamento único ou assinatura mensal — você decide. Clique em um plano para selecioná-lo no formulário.</span>
+    </div>
+
+    <div class="toggle-pagamento">
+      <button type="button" class="toggle-opcao ativo" data-tipo="unico">Pagamento único</button>
+      <button type="button" class="toggle-opcao" data-tipo="mensal">Assinatura mensal</button>
+    </div>
+
+    <div class="pacotes">
+      <div class="pacote-card selecionado" data-pacote="basico" data-preco-unico="R$ 297" data-preco-mensal="R$ 39/mês">
+        <div class="ticket-stub"><span>Nº 001</span><span class="status">disponível</span></div>
+        <div class="ticket-body">
+          <span class="tag">Básico</span>
+          <h3>Site essencial</h3>
+          <div class="preco">R$ 297</div>
+          <ul>
+            <li>Página única responsiva</li>
+            <li>Seus serviços/produtos</li>
+            <li>Botão de WhatsApp</li>
+            <li>Publicação automática</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pacote-card" data-pacote="intermediario" data-preco-unico="R$ 597" data-preco-mensal="R$ 79/mês">
+        <span class="ribbon">Mais escolhido</span>
+        <div class="ticket-stub"><span>Nº 002</span><span class="status">disponível</span></div>
+        <div class="ticket-body">
+          <span class="tag">Intermediário</span>
+          <h3>Mais completo</h3>
+          <div class="preco">R$ 597</div>
+          <ul>
+            <li>Tudo do Básico</li>
+            <li>Seções extras personalizadas</li>
+            <li>Galeria de fotos</li>
+            <li>Prioridade na publicação</li>
+          </ul>
+        </div>
+      </div>
+      <div class="pacote-card" data-pacote="catalogo" data-preco-unico="R$ 997" data-preco-mensal="R$ 129/mês">
+        <div class="ticket-stub"><span>Nº 003</span><span class="status">disponível</span></div>
+        <div class="ticket-body">
+          <span class="tag">Catálogo</span>
+          <h3>Com catálogo</h3>
+          <div class="preco">R$ 997</div>
+          <ul>
+            <li>Tudo do Intermediário</li>
+            <li>Catálogo de produtos</li>
+            <li>Botão de pedido por item</li>
+            <li>Suporte a ajustes extras</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <p class="aviso-mensal" hidden>// assinatura mensal exige e-mail — é pra onde vai a cobrança recorrente.</p>
+  </div>
+</section>
+
+<section class="block" id="avaliacoes">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Avalia-<br />ções</h2>
+      <span class="sec-aside">Negócio novo — estes depoimentos são exemplos ilustrativos do formato, não clientes reais ainda.</span>
+    </div>
+    <span class="avaliacao-aviso">// exemplo — substitua pelos depoimentos reais assim que tiver os primeiros clientes</span>
+    <div class="avaliacoes">
+      <div class="avaliacao-card">
+        <div class="estrelas">★★★★★</div>
+        <p class="depoimento">"Preenchi o formulário de manhã e à tarde já tinha o link pra mandar pros clientes. Não imaginei que fosse tão rápido."</p>
+        <div class="quem">
+          <div class="avatar">CE</div>
+          <div><div class="nome-cliente">Exemplo — Confeitaria</div><div class="ramo-cliente">plano básico</div></div>
+        </div>
+      </div>
+      <div class="avaliacao-card">
+        <div class="estrelas">★★★★★</div>
+        <p class="depoimento">"Paguei no Pix e o site já estava no ar antes de eu terminar o café. Serviço direto ao ponto."</p>
+        <div class="quem">
+          <div class="avatar">SB</div>
+          <div><div class="nome-cliente">Exemplo — Salão de beleza</div><div class="ramo-cliente">plano intermediário</div></div>
+        </div>
+      </div>
+      <div class="avaliacao-card">
+        <div class="estrelas">★★★★★</div>
+        <p class="depoimento">"Gostei de poder escolher entre pagar uma vez ou assinar por mês. Ficou dentro do orçamento da loja."</p>
+        <div class="quem">
+          <div class="avatar">CD</div>
+          <div><div class="nome-cliente">Exemplo — Loja de decoração</div><div class="ramo-cliente">plano catálogo</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block form-section" id="pedido">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Peça<br />seu site</h2>
+      <span class="sec-aside">Ao enviar, você vai direto para o pagamento. Assim que for aprovado, seu site é gerado e publicado.</span>
+    </div>
+
+    <form class="pedido-form" method="POST" action="/pedido">
+      <input type="hidden" id="tipoPagamento" name="tipoPagamento" value="unico" />
+      <div class="campo">
+        <label for="nomeEmpresa">Nome da empresa *</label>
+        <input type="text" id="nomeEmpresa" name="nomeEmpresa" required />
+      </div>
+      <div class="campo">
+        <label for="ramoAtividade">Ramo de atividade *</label>
+        <input type="text" id="ramoAtividade" name="ramoAtividade" placeholder="Ex: confeitaria, salão de beleza" required />
+      </div>
+      <div class="campo">
+        <label for="cidade">Cidade/Estado *</label>
+        <input type="text" id="cidade" name="cidade" placeholder="Ex: Campinas - SP" required />
+      </div>
+      <div class="campo">
+        <label for="whatsapp">WhatsApp (com DDD) *</label>
+        <input type="text" id="whatsapp" name="whatsapp" placeholder="(19) 99876-5432" required />
+      </div>
+      <div class="campo">
+        <label for="email" id="label-email">E-mail (opcional)</label>
+        <input type="email" id="email" name="email" />
+        <small id="dica-email" hidden>Obrigatório na assinatura mensal — é pra onde vai a cobrança.</small>
+      </div>
+      <div class="campo">
+        <label for="slogan">Slogan curto (opcional)</label>
+        <input type="text" id="slogan" name="slogan" />
+      </div>
+      <div class="campo">
+        <label for="sobre">Sobre o negócio (opcional)</label>
+        <textarea id="sobre" name="sobre" placeholder="Um parágrafo curto sobre a empresa"></textarea>
+      </div>
+      <div class="campo">
+        <label for="servicosTexto">Serviços/produtos *</label>
+        <textarea id="servicosTexto" name="servicosTexto" placeholder="Separe por vírgula. Ex: Corte de cabelo, Manicure, Coloração" required></textarea>
+        <small>Separe cada item por vírgula.</small>
+      </div>
+      <div class="campo">
+        <label for="pacote">Plano</label>
+        <select id="pacote" name="pacote">
+          <option value="basico">Básico - R$ 297</option>
+          <option value="intermediario">Intermediário - R$ 597</option>
+          <option value="catalogo">Catálogo - R$ 997</option>
+        </select>
+      </div>
+      <div class="campo campo-pagamento-form">
+        <label>Forma de pagamento</label>
+        <div class="toggle-pagamento toggle-pagamento--form">
+          <button type="button" class="toggle-opcao ativo" data-tipo="unico">Pagamento único</button>
+          <button type="button" class="toggle-opcao" data-tipo="mensal">Assinatura mensal</button>
+        </div>
+      </div>
+      <div class="payment-badges" style="margin: 18px 0 14px;">
+        <span class="badge" title="Pix">
+          <svg width="34" height="20" viewBox="0 0 34 20"><g fill="none" stroke="#32BCAD" stroke-width="2" stroke-linejoin="round"><path d="M17 3l4 4-4 4-4-4z"/><path d="M17 9l4 4-4 4-4-4z"/></g><text x="24" y="14" font-family="Arial, sans-serif" font-weight="700" font-size="9" fill="#32BCAD">Pix</text></svg>
+        </span>
+        <span class="badge" title="Visa">
+          <svg width="40" height="20" viewBox="0 0 40 20"><rect width="40" height="20" rx="2" fill="#1434CB"/><text x="20" y="14.5" text-anchor="middle" font-family="Arial, sans-serif" font-style="italic" font-weight="800" font-size="10" fill="#fff">VISA</text></svg>
+        </span>
+        <span class="badge" title="Mastercard">
+          <svg width="34" height="20" viewBox="0 0 34 20"><circle cx="13" cy="10" r="7.5" fill="#EB001B"/><circle cx="21" cy="10" r="7.5" fill="#F79E1B" opacity="0.9"/></svg>
+        </span>
+        <span class="badge" title="Boleto">
+          <svg width="34" height="20" viewBox="0 0 34 20"><g fill="#2b2b2b"><rect x="2" y="3" width="1.4" height="14"/><rect x="5" y="3" width="2.4" height="14"/><rect x="9" y="3" width="1.4" height="14"/><rect x="12" y="3" width="1.4" height="14"/><rect x="15" y="3" width="2.4" height="14"/><rect x="19" y="3" width="1.4" height="14"/><rect x="22" y="3" width="2.4" height="14"/><rect x="26" y="3" width="1.4" height="14"/><rect x="29" y="3" width="1.4" height="14"/></g></svg>
+        </span>
+      </div>
+      <button type="submit" id="botao-pagar">Ir para pagamento (Pix)</button>
+      <p class="checkout-seguro">// checkout processado com segurança pelo Mercado Pago</p>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <span>Site para MEI — gerado e publicado automaticamente.</span>
+  <span>// build: vibecoded</span>
+</footer>
+
+<script>
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.timeline()
+    .from('.sec-no', { y: -10, opacity: 0, duration: 0.5, ease: 'power2.out' })
+    .from('.hero h1', { y: 28, opacity: 0, duration: 0.7, ease: 'power3.out' }, '-=0.25')
+    .from('.hero p.lead', { y: 18, opacity: 0, duration: 0.6, ease: 'power2.out' }, '-=0.35')
+    .from('.hero-ctas a', { y: 16, opacity: 0, duration: 0.5, stagger: 0.1, ease: 'power2.out' }, '-=0.3')
+    .from('.field-strip', { y: 14, opacity: 0, duration: 0.5, ease: 'power2.out' }, '-=0.2')
+    .from('.hero-mockup', { y: 24, opacity: 0, duration: 0.6, ease: 'power2.out' }, '-=0.1');
+
+  gsap.utils.toArray('.step-card').forEach((card, i) => {
+    gsap.from(card, {
+      scrollTrigger: { trigger: card, start: 'top 85%' },
+      y: 30, opacity: 0, duration: 0.6, delay: i * 0.08, ease: 'power2.out',
+    });
+  });
+
+  gsap.from('.demo-frame-wrap', {
+    scrollTrigger: { trigger: '.demo-frame-wrap', start: 'top 80%' },
+    y: 40, opacity: 0, duration: 0.8, ease: 'power2.out',
+  });
+
+  gsap.utils.toArray('.pacote-card').forEach((card, i) => {
+    gsap.from(card, {
+      scrollTrigger: { trigger: card, start: 'top 85%' },
+      y: 30, opacity: 0, duration: 0.6, delay: i * 0.08, ease: 'power2.out',
+    });
+  });
+
+  gsap.from('.pedido-form', {
+    scrollTrigger: { trigger: '.pedido-form', start: 'top 85%' },
+    y: 30, opacity: 0, duration: 0.7, ease: 'power2.out',
+  });
+  gsap.to('.campo', {
+    scrollTrigger: { trigger: '.pedido-form', start: 'top 85%' },
+    y: 0, opacity: 1, duration: 0.5, stagger: 0.06, ease: 'power2.out',
+  });
+
+  document.querySelectorAll('.pacote-card').forEach((card) => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.pacote-card').forEach((c) => c.classList.remove('selecionado'));
+      card.classList.add('selecionado');
+      document.getElementById('pacote').value = card.dataset.pacote;
+      gsap.fromTo(card, { scale: 0.98 }, { scale: 1, duration: 0.3, ease: 'back.out(2)' });
+      document.getElementById('pedido').scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  const submitBtn = document.querySelector('#botao-pagar');
+  submitBtn.addEventListener('mouseenter', () => gsap.to(submitBtn, { scale: 1.02, duration: 0.2 }));
+  submitBtn.addEventListener('mouseleave', () => gsap.to(submitBtn, { scale: 1, duration: 0.2 }));
+
+  // --- Abas e cards de demonstração (troca o iframe entre os 3 exemplos) ---
+  function mostrarExemplo(n, url) {
+    const caminho = `/exemplo/${n}/`;
+    document.querySelectorAll('.demo-tab').forEach((t) => t.classList.toggle('ativo', t.dataset.exemplo === n));
+    document.querySelectorAll('.demo-card').forEach((c) => c.classList.toggle('ativo', c.dataset.exemplo === n));
+    document.getElementById('demo-url').textContent = url;
+    document.getElementById('demo-abrir').href = caminho;
+    const iframe = document.getElementById('demo-iframe');
+    gsap.to(iframe, {
+      opacity: 0, duration: 0.15, onComplete: () => {
+        iframe.src = caminho;
+        gsap.to(iframe, { opacity: 1, duration: 0.3 });
+      },
+    });
+  }
+  document.querySelectorAll('.demo-tab').forEach((tab) => {
+    tab.addEventListener('click', () => mostrarExemplo(tab.dataset.exemplo, tab.dataset.url));
+  });
+  document.querySelectorAll('.demo-card').forEach((card) => {
+    card.addEventListener('click', () => {
+      mostrarExemplo(card.dataset.exemplo, card.dataset.url);
+      gsap.fromTo(card, { scale: 0.98 }, { scale: 1, duration: 0.3, ease: 'back.out(2)' });
+    });
+  });
+
+  gsap.utils.toArray('.demo-card').forEach((card, i) => {
+    gsap.from(card, {
+      scrollTrigger: { trigger: card, start: 'top 88%' },
+      y: 24, opacity: 0, duration: 0.5, delay: i * 0.08, ease: 'power2.out',
+    });
+  });
+
+  gsap.utils.toArray('.avaliacao-card').forEach((card, i) => {
+    gsap.from(card, {
+      scrollTrigger: { trigger: card, start: 'top 88%' },
+      y: 24, opacity: 0, duration: 0.5, delay: i * 0.08, ease: 'power2.out',
+    });
+  });
+
+  // --- Forma de pagamento (único x mensal): troca preços e exige e-mail na assinatura ---
+  const PRECOS_MENSAIS_SELECT = {
+    basico: 'Básico - R$ 39/mês',
+    intermediario: 'Intermediário - R$ 79/mês',
+    catalogo: 'Catálogo - R$ 129/mês',
+  };
+  const PRECOS_UNICOS_SELECT = {
+    basico: 'Básico - R$ 297',
+    intermediario: 'Intermediário - R$ 597',
+    catalogo: 'Catálogo - R$ 997',
+  };
+
+  function aplicarTipoPagamento(tipo) {
+    document.querySelectorAll('.toggle-opcao').forEach((btn) => {
+      btn.classList.toggle('ativo', btn.dataset.tipo === tipo);
+    });
+    document.getElementById('tipoPagamento').value = tipo;
+
+    document.querySelectorAll('.pacote-card').forEach((card) => {
+      card.querySelector('.preco').textContent =
+        tipo === 'mensal' ? card.dataset.precoMensal : card.dataset.precoUnico;
+    });
+
+    const selectPacote = document.getElementById('pacote');
+    const precos = tipo === 'mensal' ? PRECOS_MENSAIS_SELECT : PRECOS_UNICOS_SELECT;
+    Array.from(selectPacote.options).forEach((opt) => {
+      opt.textContent = precos[opt.value];
+    });
+
+    const emailInput = document.getElementById('email');
+    const labelEmail = document.getElementById('label-email');
+    const dicaEmail = document.getElementById('dica-email');
+    const avisoMensal = document.querySelector('.aviso-mensal');
+    const mensal = tipo === 'mensal';
+    emailInput.required = mensal;
+    labelEmail.textContent = mensal ? 'E-mail *' : 'E-mail (opcional)';
+    dicaEmail.hidden = !mensal;
+    avisoMensal.hidden = !mensal;
+
+    submitBtn.textContent = mensal ? 'Ir para assinatura mensal' : 'Ir para pagamento (Pix)';
+  }
+
+  document.querySelectorAll('.toggle-opcao').forEach((btn) => {
+    btn.addEventListener('click', () => aplicarTipoPagamento(btn.dataset.tipo));
+  });
+</script>
+
+</body>
+</html>

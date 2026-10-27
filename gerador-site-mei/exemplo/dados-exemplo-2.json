@@ -1,0 +1,16 @@
+{
+  "nomeEmpresa": "Studio Bella Hair",
+  "ramoAtividade": "Salão de Beleza",
+  "cidade": "Ribeirão Preto - SP",
+  "whatsapp": "(16) 98123-4567",
+  "email": "contato@studiobellahair.com.br",
+  "slogan": "Seu momento de cuidado e transformação",
+  "sobre": "Salão especializado em cortes, coloração e tratamentos capilares, com mais de 10 anos cuidando da beleza de nossas clientes em Ribeirão Preto.",
+  "corPrimaria": "#8b5cf6",
+  "corSecundaria": "#5b21b6",
+  "servicos": [
+    { "nome": "Corte feminino", "descricao": "Corte personalizado para o seu estilo.", "preco": "a partir de R$ 60" },
+    { "nome": "Coloração", "descricao": "Tinturas e mechas com produtos de qualidade.", "preco": "a partir de R$ 150" },
+    { "nome": "Hidratação", "descricao": "Tratamento profundo para cabelos ressecados.", "preco": "a partir de R$ 80" }
+  ]
+}

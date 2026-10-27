@@ -1,0 +1,16 @@
+{
+  "nomeEmpresa": "Casa & Estilo Decor",
+  "ramoAtividade": "Loja de Decoração e Utilidades",
+  "cidade": "Belo Horizonte - MG",
+  "whatsapp": "(31) 99234-5678",
+  "email": "vendas@casaestilodecor.com.br",
+  "slogan": "Peças únicas para transformar sua casa",
+  "sobre": "Loja local de decoração com peças selecionadas, do rústico ao moderno, para deixar sua casa com a sua cara.",
+  "corPrimaria": "#d97706",
+  "corSecundaria": "#92400e",
+  "servicos": [
+    { "nome": "Vasos e cerâmicas", "descricao": "Peças artesanais para todos os ambientes.", "preco": "a partir de R$ 45" },
+    { "nome": "Quadros decorativos", "descricao": "Diversos estilos e tamanhos.", "preco": "a partir de R$ 70" },
+    { "nome": "Consultoria de decoração", "descricao": "Ajudamos a montar o ambiente ideal.", "preco": "a partir de R$ 150" }
+  ]
+}
