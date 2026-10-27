@@ -16,8 +16,12 @@ Conversão de valores (ex: metros, temperatura, etc).
 ### ➕ Calculadora Simples
 Operações básicas utilizando Python.
 
+### 🌐 Gerador de Site para MEI
+Script Node.js que gera uma landing page estática e responsiva a partir de um JSON com os dados de um cliente MEI, pronta para publicar na Vercel ou Netlify. Veja [`gerador-site-mei/README.md`](gerador-site-mei/README.md).
+
 ## 🛠️ Tecnologias
 - Python
+- Node.js
 
 ## 🚀 Em desenvolvimento
 Atualmente estou evoluindo meus conhecimentos com foco em automação e suporte técnico.

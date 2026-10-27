@@ -1,0 +1,28 @@
+{
+  "nomeEmpresa": "Doce Sabor Confeitaria",
+  "ramoAtividade": "Confeitaria e Bolos Personalizados",
+  "cidade": "Campinas - SP",
+  "whatsapp": "(19) 99876-5432",
+  "email": "contato@docesabor.com.br",
+  "slogan": "Bolos e doces artesanais feitos com amor para o seu momento especial",
+  "sobre": "Somos uma confeitaria familiar com mais de 8 anos de experiência, especializada em bolos personalizados, doces finos e kits festa para aniversários, casamentos e eventos corporativos.",
+  "corPrimaria": "#d6336c",
+  "corSecundaria": "#a61e4d",
+  "servicos": [
+    {
+      "nome": "Bolo personalizado",
+      "descricao": "Bolos decorados sob encomenda, com tema e sabor à sua escolha.",
+      "preco": "a partir de R$ 120"
+    },
+    {
+      "nome": "Kit festa",
+      "descricao": "Docinhos finos, brigadeiros e cupcakes para sua festa.",
+      "preco": "a partir de R$ 80"
+    },
+    {
+      "nome": "Bolo no pote",
+      "descricao": "Bolos individuais no pote, ideais para presentes e eventos corporativos.",
+      "preco": "a partir de R$ 12 (unidade)"
+    }
+  ]
+}
